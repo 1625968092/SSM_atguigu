@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mapper.EmployeeMapper">
+
+    <!--
+        #{ key }  : 占位符 + 赋值  emp_id = ?   ?=赋值
+        ${ key }  ： 字符串拼接   " emp_id = "  +  id
+
+        推荐使用#{}  防止sql注入
+        总结： 动态值 使用 #{} ， 列名，表名，写成${ }
+        ？  只能替代值的位置,不能代替容器名（列名、表名、sql关键字）  emp_id = ?  不能写 ? = ?
+        sql  select *  from  表  where  列名动态 ${ColumName} = 值动态 #{ColumValue}
+    -->
+
+    <select id="queryById" resultType="com.atguigu.Employee">
+        select emp_id empId,emp_name empName,emp_salary empSalary
+            from t_emp where emp_id = #{empId}
+    </select>
+
+    <!--
+           场景一：传入的是单个简单类型  key 随便写
+     -->
+
+    <delete id="deleteById">
+        delete from t_emp where emp_id = #{empId}
+    </delete>
+
+    <select id="queryBySalary" resultType="com.atguigu.Employee">
+        select emp_id empId,emp_name empName,emp_salary empSalary
+        from t_emp where emp_salary = #{empSalary}
+    </select>
+
+    <!--
+            场景二：传入的是实体对象  key如何写？
+            key=属性名即可
+     -->
+
+    <insert id="insert">
+        insert into t_emp (emp_name , emp_salary) values (#{empName},#{empSalary});
+    </insert>
+
+    <!--
+            场景三：传入的是多个零散简单类型  key如何写？
+            可不可以随便写？  不可以
+            按照形参name获取？  也不可以
+            方案一：注解指定  @Param注解  指定多个简单参数的key,key = @Param("指定的key")
+            方案二：mybatis默认机制
+                    arg0 arg1 ......  从左到右
+                    (name,salary) name -> key =arg0  salary -> key =arg1
+                    param1  param2 ......
+                    (name,salary) name -> key =param1  salary -> key =param2
+     -->
+
+    <select id="queryByNameAndSalary" resultType="com.atguigu.Employee">
+        select emp_id empId,emp_name empName,emp_salary empSalary
+        from t_emp where emp_name = #{name} and emp_salary = #{salary}
+    </select>
+
+    <!--
+            场景四：传入Map  key如何写？
+            key=Map的key即可
+     -->
+
+
+
+    <insert id="insertEmpMapper" >
+        insert into t_emp (emp_name , emp_salary) values (#{name},#{salary});
+    </insert>
+
+</mapper>

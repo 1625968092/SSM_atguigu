@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mapper.TeacherMapper">
+
+<!--    期望非自增长的主键交给mybatis维护-->
+
+    <insert id="insertTeacher">
+<!--        插入之前先执行一段sql语句，生成一个主键值-->
+<!--        order="BEFORE|AFTER" 在语句前还是后执行-->
+<!--        resultType="string" 返回值类型-->
+<!--        keyProperty="tId" 主键的值返回给谁-->
+        <selectKey order="BEFORE" resultType="string" keyProperty="tId">
+            select REPLACE(UUID(),'-','');
+        </selectKey>
+        insert into teacher (t_id,t_name)
+            VALUE (#{tId},#{tName});
+    </insert>
+
+    <!--
+        当列名和属性名不一致时如何解决
+            方案一：起别名
+            方案二：开启驼峰式映射
+            方案三：ResultMap自定义映射  resultType和ResultMap只能二选一
+                   ResultType按照规则自动映射，按照是否开启驼峰式映射，自己映射属性和列名！只能映射一层结构！
+                   深层次的对象无法映射，也就是无法进行多表查询
+                    Order                   数据库
+                        orderId                 order_id
+                        orderName               order_name
+                        orderItem orderItem
+                                    itemId          item_id
+    -->
+
+    <!--声明ResultMap就是自定义映射规则，
+        id标识 ->select resultMap=“标识”
+        type  ->具体返回值类型  全限定符或者别名  集合只写泛型
+                id 是主键的映射关系
+                result 是普通列的映射关系
+    -->
+    <resultMap id="tMap" type="com.atguigu.pojo.Teacher">
+        <id column="t_id" property="tId"></id>
+        <result column="t_name" property="tName"></result>
+    </resultMap>
+    <select id="queryById"  resultMap="tMap">
+        select * from teacher where t_id = #{tId}
+<!--        select t_id tId,t_name tName from teacher where t_id = #{tId}-->
+    </select>
+</mapper>

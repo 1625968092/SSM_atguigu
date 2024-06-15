@@ -1,0 +1,14 @@
+#子属性格式  缩进 属性名 ： 属性
+server:
+  port: 8080
+
+user:
+  password: "123456"
+  name: "ergouzi"
+  gfs:
+    - "范冰冰"
+    - "高圆圆"
+    - "蔡徐坤"
+spring:
+  profiles:
+    active: test,work

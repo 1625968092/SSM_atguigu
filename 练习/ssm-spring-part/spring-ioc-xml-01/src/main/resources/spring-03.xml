@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+<!--    声明组件的信息  组件的信息ioc配置 - 被applicationContext读取了 - 实例化对象-->
+    <bean id="HappyComponent" class="com.atguitu.ioc_03.HappyComponent"></bean>
+</beans>
